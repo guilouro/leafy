@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leafy/screens/detail_screen.dart';
 
 class Seedling extends StatelessWidget {
   final int id;
@@ -39,7 +40,14 @@ class Seedling extends StatelessWidget {
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(itemId: id, title: title),
+            ),
+          );
+        },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
