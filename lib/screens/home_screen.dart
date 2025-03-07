@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leafy/ui/seedling.dart';
+import 'package:leafy/screens/group_form_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,7 +22,14 @@ class HomeScreen extends StatelessWidget {
               child: SizedBox(
                 width: 300,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GroupForm(),
+                      ),
+                    );
+                  },
                   child: const Text('Create New Challenge'),
                 ),
               ),
