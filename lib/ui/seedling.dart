@@ -20,20 +20,12 @@ class Seedling extends StatelessWidget {
     final progress = ((completedTasks / totalTasks) * 100);
 
     String progressLevel(int progress) {
-      switch (progress) {
-        case <= 20:
-          return '🔴';
-        case <= 40:
-          return '🟡';
-        case <= 60:
-          return '🟡';
-        case <= 80:
-          return '🟡';
-        case <= 100:
-          return '🟢';
-        default:
-          return '🔴';
-      }
+      if (progress <= 20) return 'L1';
+      if (progress <= 40) return 'L2';
+      if (progress <= 60) return 'L3';
+      if (progress <= 80) return 'L4';
+      if (progress <= 100) return 'L5';
+      return 'L1';
     }
 
     return Card(
@@ -52,9 +44,11 @@ class Seedling extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(id.toString()),
-            Text('$completedTasks/$totalTasks', style: TextStyle(fontSize: 12)),
-            Text(progressLevel(progress.toInt())),
+            Text(
+              progressLevel(progress.toInt()),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Text('$completedTasks/$totalTasks', style: TextStyle(fontSize: 10)),
           ],
         ),
       ),
