@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leafy/screens/detail_screen.dart';
 
 class Seedling extends StatelessWidget {
-  final int id;
+  final String id;
   final String title;
   final int totalTasks;
   final int completedTasks;

@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:leafy/repositories/challenges.dart';
+import 'package:provider/provider.dart';
 
 class DetailScreen extends StatelessWidget {
-  final int itemId;
+  final String itemId;
   final String title;
 
   const DetailScreen({super.key, required this.itemId, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> tasks = [
-      {'title': 'Task 1', 'status': 'pending'},
-      {'title': 'Task 2', 'status': 'completed'},
-      {'title': 'Task 3', 'status': 'pending'},
-    ];
+    final challengesRepository = Provider.of<ChallengesRepository>(context);
+
+    final challenge = challengesRepository.listChallenges.firstWhere(
+      (challenge) => challenge.title == title,
+    );
+    final tasks = challenge.tasks;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Group Title')),
+      appBar: AppBar(title: Text(challenge.title)),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -40,10 +43,10 @@ class DetailScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(
-                      tasks[index]['title'],
+                      tasks[index].title,
                       style: TextStyle(
                         decoration:
-                            tasks[index]['status'] == 'completed'
+                            tasks[index].status == 'completed'
                                 ? TextDecoration.lineThrough
                                 : null,
                       ),
@@ -53,17 +56,23 @@ class DetailScreen extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: Icon(
-                            tasks[index]['status'] == 'completed'
+                            tasks[index].status == 'completed'
                                 ? Icons.check_circle
                                 : Icons.check_circle_outline,
                           ),
                           color: Colors.green,
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.cancel_outlined),
-                          color: Colors.red,
-                          onPressed: () {},
+                          onPressed: () {
+                            final status =
+                                tasks[index].status == 'completed'
+                                    ? 'pending'
+                                    : 'completed';
+
+                            challengesRepository.updateTaskStatus(
+                              challenge,
+                              tasks[index],
+                              status,
+                            );
+                          },
                         ),
                       ],
                     ),

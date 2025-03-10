@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:leafy/screens/home_screen.dart';
+import 'package:leafy/repositories/challenges.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ChallengesRepository(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

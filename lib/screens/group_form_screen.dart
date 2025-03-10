@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:leafy/models/challenges.dart';
+import 'package:leafy/models/tasks.dart';
+import 'package:leafy/repositories/challenges.dart';
+import 'package:leafy/screens/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class GroupForm extends StatefulWidget {
   const GroupForm({super.key});
@@ -15,7 +21,7 @@ class _GroupFormState extends State<GroupForm> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('tasks: $tasks');
+    final challengesRepository = Provider.of<ChallengesRepository>(context);
 
     void addTask(String task) {
       if (task.isNotEmpty) {
@@ -29,9 +35,26 @@ class _GroupFormState extends State<GroupForm> {
 
     void saveChallenge() {
       if (formKey.currentState!.validate()) {
-        debugPrint('title: ${titleController.text}');
-        debugPrint('tasks: $tasks');
+        final challengeTasks =
+            tasks.map((task) => Task(title: task, status: 'pending')).toList();
+
+        challengesRepository.addChallenge(
+          Challenge(
+            id: const Uuid().v4(),
+            title: titleController.text,
+            tasks: challengeTasks,
+          ),
+        );
       }
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Challenge created successfully')),
+      );
     }
 
     return Scaffold(
