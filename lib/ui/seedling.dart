@@ -38,10 +38,7 @@ class Seedling extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder:
-                  (context) => DetailScreen(
-                    itemId: challenge.key.toString(),
-                    title: challenge.title,
-                  ),
+                  (context) => DetailScreen(itemKey: challenge.key.toString()),
             ),
           );
         },

@@ -3,26 +3,70 @@ import 'package:leafy/models/extensions/challenges_extension.dart';
 import 'package:leafy/models/tasks.dart';
 import 'package:leafy/repositories/challenges.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 class DetailScreen extends StatelessWidget {
-  final String itemId;
-  final String title;
+  final String itemKey;
 
-  const DetailScreen({super.key, required this.itemId, required this.title});
+  const DetailScreen({super.key, required this.itemKey});
 
   @override
   Widget build(BuildContext context) {
     final challengesRepository = Provider.of<ChallengesRepository>(context);
 
-    final challenge = challengesRepository.listChallenges.firstWhere(
-      (challenge) => challenge.title == title,
+    final challenge = challengesRepository.listChallenges.firstWhereOrNull(
+      (challenge) => challenge.key.toString() == itemKey,
     );
+
+    if (challenge == null) {
+      return const Scaffold(body: Center(child: Text('Challenge not found')));
+    }
+
     final tasks = challenge.tasks;
+
+    void removeChallenge() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Delete Challenge'),
+            content: const Text(
+              'Are you sure you want to delete this challenge?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  challengesRepository.removeChallenge(challenge);
+                  Navigator.pop(context); // Close dialog
+                  Navigator.pop(context); // Return to previous screen
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Challenge deleted')),
+                  );
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(challenge.title),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.edit))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              removeChallenge();
+            },
+            icon: const Icon(Icons.delete_rounded),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
@@ -35,7 +79,7 @@ class DetailScreen extends StatelessWidget {
                 decoration: BoxDecoration(color: Colors.white),
                 child: Center(
                   child: Text(
-                    'Item $itemId',
+                    challenge.title,
                     style: const TextStyle(fontSize: 24),
                   ),
                 ),
