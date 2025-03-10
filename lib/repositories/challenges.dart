@@ -20,6 +20,7 @@ class ChallengesRepository extends ChangeNotifier {
   Future<void> _openBox() async {
     Hive.registerAdapter(ChallengeAdapter());
     Hive.registerAdapter(TaskAdapter());
+    Hive.registerAdapter(TaskStatusAdapter());
     box = await Hive.openLazyBox<Challenge>('challenges');
   }
 
@@ -56,7 +57,11 @@ class ChallengesRepository extends ChangeNotifier {
     }
   }
 
-  void updateTaskStatus(Challenge challenge, Task task, String status) async {
+  void updateTaskStatus(
+    Challenge challenge,
+    Task task,
+    TaskStatus status,
+  ) async {
     final updatedChallenge = _challenges.findAndUpdate(
       challenge: challenge,
       task: task,
@@ -67,8 +72,8 @@ class ChallengesRepository extends ChangeNotifier {
       final index = _challenges.indexOf(challenge);
       _challenges[index] = updatedChallenge;
       await box.put(challenge.key, updatedChallenge);
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void clearChallenges() async {

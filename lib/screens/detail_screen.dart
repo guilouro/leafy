@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:leafy/models/extensions/challenges_extension.dart';
+import 'package:leafy/models/tasks.dart';
 import 'package:leafy/repositories/challenges.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,10 @@ class DetailScreen extends StatelessWidget {
     final tasks = challenge.tasks;
 
     return Scaffold(
-      appBar: AppBar(title: Text(challenge.title)),
+      appBar: AppBar(
+        title: Text(challenge.title),
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.edit))],
+      ),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -46,7 +51,7 @@ class DetailScreen extends StatelessWidget {
                       tasks[index].title,
                       style: TextStyle(
                         decoration:
-                            tasks[index].status == 'completed'
+                            tasks[index].isCompleted
                                 ? TextDecoration.lineThrough
                                 : null,
                       ),
@@ -56,16 +61,16 @@ class DetailScreen extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: Icon(
-                            tasks[index].status == 'completed'
+                            tasks[index].isCompleted
                                 ? Icons.check_circle
                                 : Icons.check_circle_outline,
                           ),
                           color: Colors.green,
                           onPressed: () {
                             final status =
-                                tasks[index].status == 'completed'
-                                    ? 'pending'
-                                    : 'completed';
+                                tasks[index].isCompleted
+                                    ? TaskStatus.pending
+                                    : TaskStatus.completed;
 
                             challengesRepository.updateTaskStatus(
                               challenge,

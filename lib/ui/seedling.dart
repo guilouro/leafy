@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leafy/models/challenges.dart';
+import 'package:leafy/models/tasks.dart';
 import 'package:leafy/screens/detail_screen.dart';
 
 class Seedling extends StatelessWidget {
@@ -12,7 +13,9 @@ class Seedling extends StatelessWidget {
     // Calculate progress safely
     final totalTasks = challenge.tasks.length;
     final completedTasks =
-        challenge.tasks.where((task) => task.status == 'completed').length;
+        challenge.tasks
+            .where((task) => task.status == TaskStatus.completed)
+            .length;
 
     // Avoid division by zero
     final progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0.0;

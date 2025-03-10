@@ -5,7 +5,7 @@ extension ChallengesExtension on List<Challenge> {
   Challenge? findAndUpdate({
     required Challenge challenge,
     required Task task,
-    required String newStatus,
+    required TaskStatus newStatus,
   }) {
     final challengeIndex = indexOf(challenge);
     if (challengeIndex == -1) return null;
@@ -19,4 +19,9 @@ extension ChallengesExtension on List<Challenge> {
 
     return Challenge(title: challenge.title, tasks: updatedTasks);
   }
+}
+
+extension TaskStatusExtension on Task {
+  bool get isCompleted => status == TaskStatus.completed;
+  bool get isPending => status == TaskStatus.pending;
 }

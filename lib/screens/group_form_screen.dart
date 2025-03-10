@@ -35,7 +35,9 @@ class _GroupFormState extends State<GroupForm> {
     void saveChallenge() {
       if (formKey.currentState!.validate()) {
         final challengeTasks =
-            tasks.map((task) => Task(title: task, status: 'pending')).toList();
+            tasks
+                .map((task) => Task(title: task, status: TaskStatus.pending))
+                .toList();
 
         challengesRepository.addChallenge(
           Challenge(title: titleController.text, tasks: challengeTasks),
