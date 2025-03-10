@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leafy/models/extensions/challenges_extension.dart';
 import 'package:leafy/models/tasks.dart';
 import 'package:leafy/repositories/challenges.dart';
+import 'package:leafy/screens/group_form_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
@@ -65,6 +66,17 @@ class DetailScreen extends StatelessWidget {
               removeChallenge();
             },
             icon: const Icon(Icons.delete_rounded),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GroupForm(challenge: challenge),
+                ),
+              );
+            },
+            icon: const Icon(Icons.edit_rounded),
           ),
         ],
       ),

@@ -48,11 +48,14 @@ class ChallengesRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateChallenge(Challenge challenge) async {
-    final index = _challenges.indexOf(challenge);
+  void updateChallenge(Challenge challenge, Challenge newInstance) async {
+    final index = _challenges.indexWhere(
+      (element) => element.key == challenge.key,
+    );
+
     if (index != -1) {
-      _challenges[index] = challenge;
-      await box.put(challenge.key, challenge);
+      _challenges[index] = newInstance;
+      await box.put(challenge.key, newInstance);
       notifyListeners();
     }
   }

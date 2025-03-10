@@ -4,9 +4,11 @@ import 'package:leafy/models/tasks.dart';
 import 'package:leafy/repositories/challenges.dart';
 import 'package:leafy/screens/home_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 class GroupForm extends StatefulWidget {
-  const GroupForm({super.key});
+  final Challenge? challenge;
+  const GroupForm({super.key, this.challenge});
 
   @override
   State<GroupForm> createState() => _GroupFormState();
@@ -19,43 +21,84 @@ class _GroupFormState extends State<GroupForm> {
   List<String> tasks = [];
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.challenge != null) {
+      titleController.text = widget.challenge!.title;
+      tasks = widget.challenge!.tasks.map((task) => task.title).toList();
+    }
+  }
+
+  Task preserveTaskStatus(String task) {
+    final old = widget.challenge!.tasks.firstWhereOrNull(
+      (t) => t.title == task,
+    );
+    if (old != null) {
+      return Task(title: old.title, status: old.status);
+    }
+    return Task(title: task, status: TaskStatus.pending);
+  }
+
+  void addTask(String task) {
+    if (task.isNotEmpty) {
+      setState(() {
+        tasks.add(task);
+      });
+
+      taskController.clear();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final challengesRepository = Provider.of<ChallengesRepository>(context);
 
-    void addTask(String task) {
-      if (task.isNotEmpty) {
-        setState(() {
-          tasks.add(task);
-        });
-
-        taskController.clear();
-      }
-    }
-
     void saveChallenge() {
       if (formKey.currentState!.validate()) {
-        final challengeTasks =
-            tasks
-                .map((task) => Task(title: task, status: TaskStatus.pending))
-                .toList();
+        if (widget.challenge != null) {
+          challengesRepository.updateChallenge(
+            widget.challenge!,
+            Challenge(
+              title: titleController.text,
+              tasks: tasks.map(preserveTaskStatus).toList(),
+            ),
+          );
+        } else {
+          final challengeTasks = tasks.map(
+            (task) => Task(title: task, status: TaskStatus.pending),
+          );
 
-        challengesRepository.addChallenge(
-          Challenge(title: titleController.text, tasks: challengeTasks),
+          challengesRepository.addChallenge(
+            Challenge(
+              title: titleController.text,
+              tasks: challengeTasks.toList(),
+            ),
+          );
+        }
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              widget.challenge != null
+                  ? 'Challenge updated successfully'
+                  : 'Challenge created successfully',
+            ),
+          ),
         );
       }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Challenge created successfully')),
-      );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create New Challenge')),
+      appBar: AppBar(
+        title: Text(
+          widget.challenge != null ? 'Edit Challenge' : 'Create New Challenge',
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -124,7 +167,11 @@ class _GroupFormState extends State<GroupForm> {
                 ),
               ),
               ElevatedButton(
-                child: const Text('Save Challenge'),
+                child: Text(
+                  widget.challenge != null
+                      ? 'Update Challenge'
+                      : 'Save Challenge',
+                ),
                 onPressed: () {
                   saveChallenge();
                 },
