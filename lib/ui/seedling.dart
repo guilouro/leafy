@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:leafy/models/challenges.dart';
 import 'package:leafy/screens/detail_screen.dart';
 
 class Seedling extends StatelessWidget {
-  final String id;
-  final String title;
-  final int totalTasks;
-  final int completedTasks;
+  final Challenge challenge;
 
-  const Seedling({
-    required this.id,
-    required this.title,
-    required this.totalTasks,
-    required this.completedTasks,
-    super.key,
-  });
+  const Seedling({required this.challenge, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final progress = ((completedTasks / totalTasks) * 100);
+    // Calculate progress safely
+    final totalTasks = challenge.tasks.length;
+    final completedTasks =
+        challenge.tasks.where((task) => task.status == 'completed').length;
 
-    String progressLevel(int progress) {
+    // Avoid division by zero
+    final progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0.0;
+
+    String progressLevel(double progress) {
       if (progress <= 20) return 'L1';
       if (progress <= 40) return 'L2';
       if (progress <= 60) return 'L3';
@@ -36,7 +34,11 @@ class Seedling extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailScreen(itemId: id, title: title),
+              builder:
+                  (context) => DetailScreen(
+                    itemId: challenge.key.toString(),
+                    title: challenge.title,
+                  ),
             ),
           );
         },
@@ -45,7 +47,7 @@ class Seedling extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              progressLevel(progress.toInt()),
+              progressLevel(progress),
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             Text('$completedTasks/$totalTasks', style: TextStyle(fontSize: 10)),

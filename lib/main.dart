@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:leafy/screens/home_screen.dart';
 import 'package:leafy/repositories/challenges.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ChallengesRepository(),

@@ -4,7 +4,6 @@ import 'package:leafy/models/tasks.dart';
 import 'package:leafy/repositories/challenges.dart';
 import 'package:leafy/screens/home_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 class GroupForm extends StatefulWidget {
   const GroupForm({super.key});
@@ -39,11 +38,7 @@ class _GroupFormState extends State<GroupForm> {
             tasks.map((task) => Task(title: task, status: 'pending')).toList();
 
         challengesRepository.addChallenge(
-          Challenge(
-            id: const Uuid().v4(),
-            title: titleController.text,
-            tasks: challengeTasks,
-          ),
+          Challenge(title: titleController.text, tasks: challengeTasks),
         );
       }
 

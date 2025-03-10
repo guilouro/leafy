@@ -9,8 +9,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final challengesRepository = Provider.of<ChallengesRepository>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -38,26 +36,35 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            Center(
+              child: SizedBox(
+                width: 300,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Provider.of<ChallengesRepository>(
+                      context,
+                      listen: false,
+                    ).clearChallenges();
+                  },
+                  child: const Text('Clear All Challenges'),
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 3,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-                children:
-                    challengesRepository.listChallenges.reversed
-                        .map(
-                          (challenge) => Seedling(
-                            id: challenge.id,
-                            title: challenge.title,
-                            totalTasks: challenge.tasks.length,
-                            completedTasks:
-                                challenge.tasks
-                                    .where((task) => task.status == 'completed')
-                                    .length,
-                          ),
-                        )
-                        .toList(),
+              child: Consumer<ChallengesRepository>(
+                builder: (context, challengesRepository, child) {
+                  return GridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    children:
+                        challengesRepository.listChallenges.reversed
+                            .map((challenge) => Seedling(challenge: challenge))
+                            .toList(),
+                  );
+                },
               ),
             ),
           ],
