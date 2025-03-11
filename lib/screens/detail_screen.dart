@@ -116,34 +116,36 @@ class DetailScreen extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            Flower(challenge: challenge, width: 250, height: 250),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(top: 8),
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      final status =
-                          tasks[index].isCompleted
-                              ? TaskStatus.pending
-                              : TaskStatus.completed;
+        child: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              Flower(challenge: challenge, width: 250, height: 250),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(top: 8),
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        final status =
+                            tasks[index].isCompleted
+                                ? TaskStatus.pending
+                                : TaskStatus.completed;
 
-                      challengesRepository.updateTaskStatus(
-                        challenge,
-                        tasks[index],
-                        status,
-                      );
-                    },
-                    child: TaskTile(task: tasks[index]),
-                  );
-                },
+                        challengesRepository.updateTaskStatus(
+                          challenge,
+                          tasks[index],
+                          status,
+                        );
+                      },
+                      child: TaskTile(task: tasks[index]),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
