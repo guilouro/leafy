@@ -65,22 +65,46 @@ class DetailScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: Text(challenge.title),
         actions: [
-          IconButton(
-            onPressed: () {
-              removeChallenge();
-            },
-            icon: const Icon(Icons.delete_rounded),
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GroupForm(challenge: challenge),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.edit_rounded,
+                color: Colors.blueGrey,
+                size: 16,
+              ),
+            ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GroupForm(challenge: challenge),
-                ),
-              );
-            },
-            icon: const Icon(Icons.edit_rounded),
+          Container(
+            margin: const EdgeInsets.only(right: 16),
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: removeChallenge,
+              icon: const Icon(
+                Icons.delete_rounded,
+                color: Colors.blueGrey,
+                size: 16,
+              ),
+            ),
           ),
         ],
       ),
