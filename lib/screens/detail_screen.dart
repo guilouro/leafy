@@ -3,6 +3,8 @@ import 'package:leafy/models/extensions/challenges_extension.dart';
 import 'package:leafy/models/tasks.dart';
 import 'package:leafy/repositories/challenges.dart';
 import 'package:leafy/screens/group_form_screen.dart';
+import 'package:leafy/ui/flower.dart';
+import 'package:leafy/ui/tast_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
@@ -58,7 +60,9 @@ class DetailScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: Text(challenge.title),
         actions: [
           IconButton(
@@ -81,62 +85,36 @@ class DetailScreen extends StatelessWidget {
         ],
       ),
       body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/image/bg.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Center(
-              child: Container(
-                width: 250,
-                height: 250,
-                decoration: BoxDecoration(color: Colors.white),
-                child: Center(
-                  child: Text(
-                    challenge.title,
-                    style: const TextStyle(fontSize: 24),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
+            Flower(challenge: challenge, width: 250, height: 250),
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.only(top: 8),
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      tasks[index].title,
-                      style: TextStyle(
-                        decoration:
-                            tasks[index].isCompleted
-                                ? TextDecoration.lineThrough
-                                : null,
-                      ),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            tasks[index].isCompleted
-                                ? Icons.check_circle
-                                : Icons.check_circle_outline,
-                          ),
-                          color: Colors.green,
-                          onPressed: () {
-                            final status =
-                                tasks[index].isCompleted
-                                    ? TaskStatus.pending
-                                    : TaskStatus.completed;
+                  return InkWell(
+                    onTap: () {
+                      final status =
+                          tasks[index].isCompleted
+                              ? TaskStatus.pending
+                              : TaskStatus.completed;
 
-                            challengesRepository.updateTaskStatus(
-                              challenge,
-                              tasks[index],
-                              status,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                      challengesRepository.updateTaskStatus(
+                        challenge,
+                        tasks[index],
+                        status,
+                      );
+                    },
+                    child: TaskTile(task: tasks[index]),
                   );
                 },
               ),
