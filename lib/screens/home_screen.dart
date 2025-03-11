@@ -26,24 +26,49 @@ class HomeScreen extends StatelessWidget {
                 '🌿 Leafy',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 10),
-              Center(
-                child: SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const GroupForm(),
+              const SizedBox(height: 8),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4CAF50),
+                    foregroundColor: Colors.white,
+                    elevation: 4,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GroupForm(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.eco_rounded, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Plant',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    },
-                    child: const Text('Create New Challenge'),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 60),
               Expanded(
                 child: Consumer<ChallengesRepository>(
                   builder: (context, challengesRepository, child) {
