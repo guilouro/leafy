@@ -24,7 +24,7 @@ class Flower extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
-            'assets/image/flower1/${challengeLevel(challenge)}.png',
+            'assets/image/${challenge.flowerType.name}/${challengeLevel(challenge)}.png',
           ),
         ),
       ),

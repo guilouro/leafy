@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 part 'tasks.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 2)
 class Task extends HiveObject {
   @HiveField(0)
   final String title;
@@ -11,7 +11,7 @@ class Task extends HiveObject {
   Task({required this.title, required this.status});
 }
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 3)
 enum TaskStatus {
   @HiveField(0)
   pending,

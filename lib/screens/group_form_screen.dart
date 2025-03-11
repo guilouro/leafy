@@ -5,6 +5,7 @@ import 'package:leafy/repositories/challenges.dart';
 import 'package:leafy/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
+import 'dart:math';
 
 class GroupForm extends StatefulWidget {
   final Challenge? challenge;
@@ -61,6 +62,7 @@ class _GroupFormState extends State<GroupForm> {
             Challenge(
               title: titleController.text,
               tasks: tasks.map(preserveTaskStatus).toList(),
+              flowerType: widget.challenge!.flowerType,
             ),
           );
         } else {
@@ -68,10 +70,16 @@ class _GroupFormState extends State<GroupForm> {
             (task) => Task(title: task, status: TaskStatus.pending),
           );
 
+          // Randomly assign a flower type to the each new challenge
+          final random = Random();
+          final flowerLength = FlowerType.values.length;
+          final flowerType = FlowerType.values[random.nextInt(flowerLength)];
+
           challengesRepository.addChallenge(
             Challenge(
               title: titleController.text,
               tasks: challengeTasks.toList(),
+              flowerType: flowerType,
             ),
           );
         }

@@ -21,6 +21,7 @@ class ChallengesRepository extends ChangeNotifier {
     Hive.registerAdapter(ChallengeAdapter());
     Hive.registerAdapter(TaskAdapter());
     Hive.registerAdapter(TaskStatusAdapter());
+    Hive.registerAdapter(FlowerTypeAdapter());
     box = await Hive.openLazyBox<Challenge>('challenges');
   }
 

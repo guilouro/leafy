@@ -17,7 +17,11 @@ extension ChallengesExtension on List<Challenge> {
     final updatedTasks = List<Task>.from(challenge.tasks)
       ..[taskIndex] = updatedTask;
 
-    return Challenge(title: challenge.title, tasks: updatedTasks);
+    return Challenge(
+      title: challenge.title,
+      tasks: updatedTasks,
+      flowerType: challenge.flowerType,
+    );
   }
 }
 
