@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leafy/models/challenges.dart';
 import 'package:leafy/models/tasks.dart';
+import 'package:leafy/repositories/ai_repository.dart';
 import 'package:leafy/repositories/challenges.dart';
 import 'package:leafy/screens/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -231,46 +232,101 @@ class _GroupFormState extends State<GroupForm> {
                               },
                             ),
                   ),
-                  Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: taskController,
-                              decoration: InputDecoration(
-                                labelText: 'New Task',
-                                hintText: 'Enter task description',
-                                prefixIcon: const Icon(Icons.add_task),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 80,
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: taskController,
+                                    decoration: InputDecoration(
+                                      labelText: 'New Task',
+                                      hintText: 'Enter task description',
+                                      prefixIcon: const Icon(Icons.add_task),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onSubmitted: (task) {
+                                      addTask(task);
+                                    },
+                                  ),
                                 ),
-                              ),
-                              onSubmitted: (task) {
-                                addTask(task);
-                              },
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.add,
+                                    color: Colors.green,
+                                    size: 32,
+                                  ),
+                                  onPressed: () {
+                                    addTask(taskController.text);
+                                  },
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          IconButton(
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 20,
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: IconButton(
                             icon: const Icon(
-                              Icons.add,
-                              color: Colors.green,
+                              Icons.auto_awesome,
+                              color: Colors.amber,
                               size: 32,
                             ),
-                            onPressed: () {
-                              addTask(taskController.text);
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.green,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+
+                              try {
+                                final aiRepository = AiRepository();
+                                final suggestedTasks = await aiRepository
+                                    .getSuggestedTasks(titleController.text);
+                                setState(() {
+                                  tasks.addAll(
+                                    suggestedTasks.map((task) => task.title),
+                                  );
+                                });
+                              } finally {
+                                if (mounted) {
+                                  Navigator.pop(context);
+                                }
+                              }
                             },
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
