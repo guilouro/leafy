@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:leafy/models/challenges.dart';
 import 'package:leafy/models/tasks.dart';
@@ -6,7 +8,6 @@ import 'package:leafy/repositories/challenges.dart';
 import 'package:leafy/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
-import 'dart:math';
 
 class GroupForm extends StatefulWidget {
   final Challenge? challenge;
@@ -222,7 +223,7 @@ class _GroupFormState extends State<GroupForm> {
                                         color: Colors.green,
                                       ),
                                       title: Text(
-                                        tasks[index],
+                                        utf8.decode(tasks[index].codeUnits),
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                       trailing: IconButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:leafy/models/extensions/challenges_extension.dart';
 import 'package:leafy/models/tasks.dart';
 import 'package:leafy/repositories/challenges.dart';
@@ -138,6 +139,8 @@ class DetailScreen extends StatelessWidget {
                           tasks[index],
                           status,
                         );
+
+                        HapticFeedback.lightImpact();
                       },
                       child: TaskTile(task: tasks[index]),
                     );

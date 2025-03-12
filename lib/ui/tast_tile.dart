@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:leafy/models/tasks.dart';
 import 'package:leafy/models/extensions/challenges_extension.dart';
@@ -24,7 +25,7 @@ class TaskTile extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: Text(
-          task.title,
+          utf8.decode(task.title.codeUnits),
           style: TextStyle(
             fontSize: 16,
             decoration: task.isCompleted ? TextDecoration.lineThrough : null,
