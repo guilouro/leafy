@@ -2,9 +2,21 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:leafy/env/env.dart';
 
+/// Service class for interacting with OpenAI's API to generate task suggestions
 class OpenAIService {
-  final String apiKey = Env.apiKey;
+  final String _apiKey = Env.apiKey;
 
+  /// Generates AI-powered task suggestions for a given challenge title
+  ///
+  /// Takes a [challengeName] string and returns a list of 5-10 logically ordered
+  /// task suggestions related to completing that challenge.
+  ///
+  /// Makes a request to OpenAI's chat completions API using GPT-4 to generate
+  /// the suggestions. The prompt instructs the AI to return tasks in JSON array format.
+  ///
+  /// @param challengeName The title of the challenge to generate tasks for
+  /// @returns Future<List<String>> containing the generated task suggestions
+  /// @throws Exception if the API request fails
   Future<List<String>> getAISuggestions(String challengeName) async {
     final prompt =
         """Given a challenge title, create an array containing 5 to 10 actionable tasks related to the title. 
@@ -30,7 +42,7 @@ class OpenAIService {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $apiKey',
+        'Authorization': 'Bearer $_apiKey',
       },
       body: jsonEncode({
         "model": "gpt-4o-mini",

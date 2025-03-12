@@ -2,6 +2,18 @@ import 'package:leafy/models/challenges.dart';
 import 'package:leafy/models/tasks.dart';
 
 extension ChallengesExtension on List<Challenge> {
+  /// Finds a challenge and updates the status of a specific task within it
+  ///
+  /// Takes a [challenge] to find in the list, a [task] within that challenge to update,
+  /// and a [newStatus] to set for that task.
+  ///
+  /// Returns a new Challenge instance with the updated task status if found,
+  /// or null if either the challenge or task is not found.
+  ///
+  /// @param challenge The challenge containing the task to update
+  /// @param task The task to update the status for
+  /// @param newStatus The new TaskStatus to set
+  /// @returns Challenge? A new Challenge instance with updated task or null
   Challenge? findAndUpdate({
     required Challenge challenge,
     required Task task,
@@ -26,6 +38,9 @@ extension ChallengesExtension on List<Challenge> {
 }
 
 extension TaskStatusExtension on Task {
+  /// Whether the task status is completed
   bool get isCompleted => status == TaskStatus.completed;
+
+  /// Whether the task status is pending
   bool get isPending => status == TaskStatus.pending;
 }
